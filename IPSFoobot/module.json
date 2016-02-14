@@ -1,0 +1,11 @@
+{
+    "id": "{73CE7AE7-E3A6-4949-9706-E2DA4925C347}",
+    "name": "IPSFoobot",
+    "type": 3,
+    "vendor": "Foobot",
+    "aliases": ["Foobot Air Sensor Service"],
+    "parentRequirements": [""],
+    "childRequirements": [""],
+    "implemented": [""],
+    "prefix": "FB"
+}

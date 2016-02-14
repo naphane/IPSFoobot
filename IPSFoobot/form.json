@@ -1,0 +1,51 @@
+{
+    "elements":
+            [
+                {
+                    "name": "Username",
+                    "type": "ValidationTextBox",
+                    "caption": "User Name"
+                },
+                {
+                    "name": "Password",
+                    "type": "PasswordTextBox",
+                    "caption": "Password"
+                },
+                {
+                    "name": "Update",
+                    "type": "NumberSpinner",
+                    "caption": "Update Interval (seconds)"
+                }
+            ],
+	"actions":
+            [
+                {
+                    "type": "Button",
+                    "label": "Check Devices",
+                    "onClick": ""
+                }
+			],
+    "status":
+            [
+                {
+                    "code": 102,
+                    "icon": "active",
+                    "caption": "Login information valid. Authentication succeeded."
+                },
+				{
+                    "code": 201,
+                    "icon": "error",
+                    "caption": "Authentication failed."
+                },
+                {
+                    "code": 202,
+                    "icon": "error",
+                    "caption": "Username/Password cannot be empty."
+                },
+				{
+                    "code": 203,
+                    "icon": "error",
+                    "caption": "No Foobot Device has been found!"
+                }
+            ]
+}
