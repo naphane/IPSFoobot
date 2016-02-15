@@ -16,7 +16,7 @@ class IPSFoobot extends IPSModule
         
 		$this->RegisterPropertyString("Username", "");
         $this->RegisterPropertyString("Password", "");
-        $this->RegisterPropertyInteger("Update", 900);
+        $this->RegisterPropertyInteger("Update", 600);
 		
 		IPS_SetInfo($this->InstanceID, 'Request an API key at http://api.foobot.io/apidoc/index.html');
 		
@@ -321,7 +321,7 @@ class IPSFoobot extends IPSModule
 	
 	private function CreateUpdateScript()
     {
-        $Script = '<?
+        $Script = "<?
 $FBInstanceID = IPS_GetParent($_IPS['SELF']);
 $children = IPS_GetChildrenIDs($FBInstanceID);
 
@@ -329,32 +329,29 @@ foreach($children as $child) //Loop on Heaters (Links in Heater directory)
 {
    $childInstance = IPS_GetInstance($child);
    // Check if it is a Dummy Module
-   if ($childInstance['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}")
+   if ($childInstance['ModuleInfo']['ModuleID'] == \"{485D0419-BE97-4548-AA9C-C083EB82E61E}\")
    {
       $ID = $childInstance['InstanceID'];
-		$IDuuid = IPS_GetObjectIDByIdent("Uuid", $ID);
-		//echo "FBInstanceID: $FBInstanceID - Child ID: $ID - uuid: ".GetValue($IDuuid)."\r\n";
-		$result = FOO_GetDataLast($FBInstanceID, GetValue($IDuuid), 300, 300);  // "2C02576F809014C0"
-		//print_r($result);
+		$IDuuid = IPS_GetObjectIDByIdent(\"Uuid\", $ID);
 
-		// foreach ($result as Device) { // check uuid with uuid idents
-		$IDpm = IPS_GetObjectIDByIdent("Pm",$ID);
+		$result = FOO_GetDataLast($FBInstanceID, GetValue($IDuuid), 300, 300);
+	
+		$IDpm = IPS_GetObjectIDByIdent(\"Pm\",$ID);
 		SetValue($IDpm, $result->datapoints[0][1]);
-		$IDco2 = IPS_GetObjectIDByIdent("Co2",$ID);
+		$IDco2 = IPS_GetObjectIDByIdent(\"Co2\",$ID);
 		SetValue($IDco2, $result->datapoints[0][4]);
-		$IDvoc = IPS_GetObjectIDByIdent("Voc",$ID);
+		$IDvoc = IPS_GetObjectIDByIdent(\"Voc\",$ID);
 		SetValue($IDvoc, $result->datapoints[0][5]);
-		$IDallpollu = IPS_GetObjectIDByIdent("Allpollu",$ID);
+		$IDallpollu = IPS_GetObjectIDByIdent(\"Allpollu\",$ID);
 		SetValue($IDallpollu, $result->datapoints[0][6]);
 		
-		//IPS_LogMessage("FOOBOT", "datapoints 2: ".$result->datapoints[0][2]." - 3: ".$result->datapoints[0][3]);
-		$IDtmp = IPS_GetObjectIDByIdent("Tmp",$ID);
+		$IDtmp = IPS_GetObjectIDByIdent(\"Tmp\",$ID);
 		SetValue($IDtmp, $result->datapoints[0][2]);
-		$IDhum = IPS_GetObjectIDByIdent("Hum",$ID);
+		$IDhum = IPS_GetObjectIDByIdent(\"Hum\",$ID);
 		SetValue($IDhum, $result->datapoints[0][3]);
 	}
 }
-?>';
+?>";
         return $Script;
     }
 	
