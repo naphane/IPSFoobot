@@ -3,7 +3,7 @@
     "name": "IPSFoobot",
     "type": 3,
     "vendor": "Foobot",
-    "aliases": ["Foobot Air Sensor Service"],
+    "aliases": ["Foobot Air Sensors"],
     "parentRequirements": [""],
     "childRequirements": [""],
     "implemented": [""],

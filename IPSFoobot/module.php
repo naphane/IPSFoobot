@@ -196,7 +196,7 @@ class IPSFoobot extends IPSModule
 		if ($devices !== false) {
 			//foreach ($devices as $device) {	// Prepared for multiple Foobot devices support - to be tested
 				// Create a dummy Instance for each Foobot Sensor if it does not exist already
-				if (!$this->deviceInstanceExists($devices->name))
+				if (!$this->deviceInstanceExists($devices->name, $isUpdate))
 				{
 					$FBdeviceModuleID	= IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
 					IPS_SetName($FBdeviceModuleID, $devices->name);
@@ -237,21 +237,26 @@ class IPSFoobot extends IPSModule
 		}
 	}
 
-	private function deviceInstanceExists($name)
+	private function deviceInstanceExists($name, $isUpdate)
 	{
-		$children = IPS_GetChildrenIDs($this->InstanceID);
-		foreach($children as $child) //Loop on Heaters (Links in Heater directory)
+		if ($isUpdate)
 		{
-			$childInstance = IPS_GetInstance($child);
-			$childInstanceID = $childInstance['InstanceID'];
-			$childInstanceName = IPS_GetName($childInstanceID);
-			// Check if it is a Dummy Module and if it has a known device name
-			if ($childInstanceName == $name and $childInstance['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}")
+			$children = IPS_GetChildrenIDs($this->InstanceID);
+			foreach($children as $child) //Loop on Heaters (Links in Heater directory)
 			{
-				return true;	
-			} 
+				$childInstance = IPS_GetInstance($child);
+				$childInstanceID = $childInstance['InstanceID'];
+				$childInstanceName = IPS_GetName($childInstanceID);
+				// Check if it is a Dummy Module and if it has a known device name
+				if ($childInstanceName == $name and $childInstance['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}")
+				{
+					return true;	
+				} 
+			}
+			return false;
+		} else {
+			return false;
 		}
-		return false;
 	}
 
 	private function requestFoobotAPI($url, $header = "") {
@@ -325,7 +330,7 @@ class IPSFoobot extends IPSModule
 		$FBInstanceID = IPS_GetParent($_IPS["SELF"]);
 $children = IPS_GetChildrenIDs($FBInstanceID);
 
-foreach($children as $child) //Loop on Children of FB Service Instance
+foreach($children as $child) //Loop on Children of Foobot Instance
 {
    $childInstance = IPS_GetInstance($child);
    // Check if it is a Dummy Module
