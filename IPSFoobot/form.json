@@ -22,7 +22,7 @@
                 {
                     "type": "Button",
                     "label": "Check Devices",
-                    "onClick": ""
+                    "onClick": "FOO_UpdateDevices();"
                 }
 			],
     "status":
@@ -45,7 +45,7 @@
 				{
                     "code": 203,
                     "icon": "error",
-                    "caption": "No Foobot Device has been found!"
+                    "caption": "No Foobot Devices have been found!"
                 }
             ]
 }

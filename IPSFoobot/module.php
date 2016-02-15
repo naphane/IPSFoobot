@@ -17,9 +17,13 @@ class IPSFoobot extends IPSModule
 		$this->RegisterPropertyString("Username", "");
         $this->RegisterPropertyString("Password", "");
         $this->RegisterPropertyInteger("Update", 900);
-        //$ID = $this->RegisterScript('PlaylistDesign', 'Playlist Config', $this->CreatePlaylistConfigScript(), -7);
-        //IPS_SetHidden($ID, true);
-        //$this->RegisterPropertyInteger("Playlistconfig", $ID);
+		
+		IPS_SetInfo($this->InstanceID, 'Request an API key at http://api.foobot.io/apidoc/index.html');
+		
+		// Create Update Script
+		$ID = $this->RegisterScript("FoobotUpdate", "Foobot Update", $this->CreateUpdateScript(), -8);
+		IPS_SetScriptTimer($ID, $this->ReadPropertyString('Update'));
+		IPS_SetHidden($ID, true);
     }
 
     public function ApplyChanges()
@@ -44,93 +48,8 @@ class IPSFoobot extends IPSModule
 			}
 		}
 		
-		// Create Variables Profiles
-		// From Foobot: ["time","pm","tmp","hum","co2","voc","allpollu"],"units":["s","ugm3","C","pc","ppm","ppb","%"] [1445275154,45.449997,25.754375,39.512215,1033.0,286.0,62.60714]
-			
-		$this->RegisterProfileIntegerEx("Pollutant.Co2", "Gauge", "", " ppm", Array(
-            Array(0, 	"%d", "", 0x00FF00),
-            Array(1000, "%d", "", 0xFFFF00),
-            Array(2000, "%d", "", 0xFF0000)
-        ));
-		$this->RegisterProfileFloatEx("Pollutant.PM", "Gauge", "", " uG/m3", Array(
-            Array(0, 	"%.1f", "", 0x00FF00),
-            Array(25, 	"%.1f", "", 0xFF0000),
-        ));
-		$this->RegisterProfileIntegerEx("Pollutant.VC", "Gauge", "", " ppb", Array(
-            Array(0, 	"%d", "", 0x00FF00),
-            Array(500, 	"%d", "", 0xFF0000),
-        ));
+		$this->CreateDevices();
 		
-		// Get Foobot devices from API and loop on them to create Instances and Variables
-		$devices = $this->GetDevices();
-						
-		if ($devices !== false) {
-			//foreach ($devices as $device) {
-				//SetValue($this->GetIDForIdent('Name'), $devices->name);
-				//$this->RegisterVariableString("Name", "Device Name", "~String", 0);
-				// Create a dummy Instance for each Foobot Sensor
-				$FBdeviceModuleID	= IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
-				IPS_SetName($FBdeviceModuleID, $devices->name);
-				IPS_SetParent($FBdeviceModuleID, $this->InstanceID);
-				
-				$this->RegisterVariableString("Uuid", "Device UUID", "~String", 1);		
-				SetValue($this->GetIDForIdent('Uuid'), $devices->uuid);
-				IPS_SetHidden($this->GetIDForIdent('Uuid'), true);
-				IPS_SetParent($this->GetIDForIdent('Uuid'), $FBdeviceModuleID);
-				
-				$this->RegisterVariableString("Mac", "Device Mac", "~String", 2);	
-				SetValue($this->GetIDForIdent('Mac'),  $devices->mac);
-				IPS_SetHidden($this->GetIDForIdent('Mac'), true);
-				IPS_SetParent($this->GetIDForIdent('Mac'), $FBdeviceModuleID);
-				
-				// Create Variables
-				$this->RegisterVariableInteger("Co2", "Carbon Dioxide", "Pollutant.Co2", 10);
-				IPS_SetParent($this->GetIDForIdent('Co2'), $FBdeviceModuleID);
-				$this->RegisterVariableInteger("Voc", "Volatile compounds", "Pollutant.VC", 11);
-				IPS_SetParent($this->GetIDForIdent('Voc'), $FBdeviceModuleID);
-				$this->RegisterVariableInteger("Pm", "Particulate matter", "Pollutant.PM", 12);
-				IPS_SetParent($this->GetIDForIdent('Pm'), $FBdeviceModuleID);
-				$this->RegisterVariableFloat("Allpollu", "Global Pollution Index", "~Humidity.F", 13);
-				IPS_SetParent($this->GetIDForIdent('Allpollu'), $FBdeviceModuleID);
-				
-				$this->RegisterVariableFloat("Tmp", "Temperature", "~Temperature", 14);
-				IPS_SetParent($this->GetIDForIdent('Tmp'), $FBdeviceModuleID);
-				$this->RegisterVariableFloat("Hum", "Humidity", "~Humidity.F", 15);
-				IPS_SetParent($this->GetIDForIdent('Hum'), $FBdeviceModuleID);
-			//}	// End of loop on devices
-			// Create Update Script
-			$ID = $this->RegisterScript("FoobotUpdate", "Foobot Update", $this->CreateUpdateScript(), -8);
-			IPS_SetScriptTimer($ID, $this->ReadPropertyString('Update'));
-			IPS_SetHidden($ID, true);
-		} else {
-			$this->SetStatus(203);
-			IPS_LogMessage("Foobot Module", "ERROR: No Foobot Device has been found!");
-		}
-		
-        //$this->RegisterHook('/hook/LMSPlaylist' . $this->InstanceID, $ID);
-
-        //$ID = $this->RegisterScript('PlaylistDesign', 'Playlist Config', $this->CreatePlaylistConfigScript(), -4);
-        //IPS_SetHidden($ID, true);
-
-        //Workaround für persistente Daten der Instanz
-        //$this->RegisterVariableString("BufferIN", "BufferIN", "", -3);
-        //$this->RegisterVariableString("BufferOUT", "BufferOUT", "", -2);
-        //$this->RegisterVariableBoolean("WaitForResponse", "WaitForResponse", "", -1);
-        //IPS_SetHidden($this->GetIDForIdent('BufferIN'), true);
-        //IPS_SetHidden($this->GetIDForIdent('BufferOUT'), true);
-        //IPS_SetHidden($this->GetIDForIdent('WaitForResponse'), true);
-
-        // Wenn wir verbunden sind, am LMS mit listen anmelden für Events
-        //if (($this->ReadPropertyBoolean('Open'))
-        //        and ( $this->HasActiveParent($ParentID)))
-        //{
-        //    $Data = new LMSData("listen", "1");
-        //    $this->SendLMSData($Data);
-        //    $Data = new LMSData("rescan", "?", false);
-        //    $this->SendLMSData($Data);
-        //    $this->RefreshPlaylists();
-        //    $this->RefreshPlayerList();
-        //}
     }
 
 ################## PUBLIC
@@ -140,7 +59,7 @@ class IPSFoobot extends IPSModule
      */
 	
 	/**
-     * Gets the Devices associated with teh User account along with name and uuid.
+     * Gets the Devices associated with the User account along with name and uuid.
      * 
      * @return Array of Devices
      */
@@ -166,6 +85,16 @@ class IPSFoobot extends IPSModule
 		} else {
 			return false;
 		}
+	}
+	
+	/**
+     * Updates Device Instances and Variables.
+     * 
+     * @return true if success
+     */
+	public function UpdateDevices()  
+	{
+		$this->CreateDevices(true);
 	}
 	
 	/**
@@ -241,6 +170,90 @@ class IPSFoobot extends IPSModule
 
 ################# PRIVATE
 	
+
+	private function CreateDevices($isUpdate = false)
+	{
+	// Create Variables Profiles
+		// From Foobot: ["time","pm","tmp","hum","co2","voc","allpollu"],"units":["s","ugm3","C","pc","ppm","ppb","%"] [1445275154,45.449997,25.754375,39.512215,1033.0,286.0,62.60714]
+		
+		$this->RegisterProfileIntegerEx("Pollutant.Co2", "Gauge", "", " ppm", Array(
+            Array(0, 	"%d", "", 0x00FF00),
+            Array(1000, "%d", "", 0xFFFF00),
+            Array(2000, "%d", "", 0xFF0000)
+        ));
+		$this->RegisterProfileFloatEx("Pollutant.PM", "Gauge", "", " uG/m3", Array(
+            Array(0, 	"%.1f", "", 0x00FF00),
+            Array(25, 	"%.1f", "", 0xFF0000)
+        ));
+		$this->RegisterProfileIntegerEx("Pollutant.VC", "Gauge", "", " ppb", Array(
+            Array(0, 	"%d", "", 0x00FF00),
+            Array(500, 	"%d", "", 0xFF0000)
+        ));
+		
+		// Get Foobot devices from API and loop on them to create Instances and Variables
+		$devices = $this->GetDevices();
+						
+		if ($devices !== false) {
+			//foreach ($devices as $device) {	// Prepared for multiple Foobot devices support - to be tested
+				// Create a dummy Instance for each Foobot Sensor if it does not exist already
+				if (!$this->deviceInstanceExists($devices->name))
+				{
+					$FBdeviceModuleID	= IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
+					IPS_SetName($FBdeviceModuleID, $devices->name);
+					IPS_SetParent($FBdeviceModuleID, $this->InstanceID);
+				
+					$this->RegisterVariableString("Uuid", "Device UUID", "~String", 1);		
+					SetValue($this->GetIDForIdent('Uuid'), $devices->uuid);
+					IPS_SetHidden($this->GetIDForIdent('Uuid'), true);
+					IPS_SetParent($this->GetIDForIdent('Uuid'), $FBdeviceModuleID);
+				
+					$this->RegisterVariableString("Mac", "Device Mac", "~String", 2);	
+					SetValue($this->GetIDForIdent('Mac'),  $devices->mac);
+					IPS_SetHidden($this->GetIDForIdent('Mac'), true);
+					IPS_SetParent($this->GetIDForIdent('Mac'), $FBdeviceModuleID);
+				
+					// Create Variables
+					$this->RegisterVariableInteger("Co2", "Carbon Dioxide", "Pollutant.Co2", 10);
+					IPS_SetParent($this->GetIDForIdent('Co2'), $FBdeviceModuleID);
+					$this->RegisterVariableInteger("Voc", "Volatile compounds", "Pollutant.VC", 11);
+					IPS_SetParent($this->GetIDForIdent('Voc'), $FBdeviceModuleID);
+					$this->RegisterVariableInteger("Pm", "Particulate matter", "Pollutant.PM", 12);
+					IPS_SetParent($this->GetIDForIdent('Pm'), $FBdeviceModuleID);
+					$this->RegisterVariableFloat("Allpollu", "Global Pollution Index", "~Humidity.F", 13);
+					IPS_SetParent($this->GetIDForIdent('Allpollu'), $FBdeviceModuleID);
+				
+					$this->RegisterVariableFloat("Tmp", "Temperature", "~Temperature", 14);
+					IPS_SetParent($this->GetIDForIdent('Tmp'), $FBdeviceModuleID);
+					$this->RegisterVariableFloat("Hum", "Humidity", "~Humidity.F", 15);
+					IPS_SetParent($this->GetIDForIdent('Hum'), $FBdeviceModuleID);
+				}
+			//}	// End of loop on devices
+			
+			return true;
+		} else {
+			$this->SetStatus(203);
+			IPS_LogMessage("Foobot Module", "ERROR: No Foobot Devices have been found!");
+			return false;
+		}
+	}
+
+	private function deviceInstanceExists($name)
+	{
+		$children = IPS_GetChildrenIDs($this->InstanceID);
+		foreach($children as $child) //Loop on Heaters (Links in Heater directory)
+		{
+			$childInstance = IPS_GetInstance($child);
+			$childInstanceID = $childInstance['InstanceID'];
+			$childInstanceName = IPS_GetName($childInstanceID);
+			// Check if it is a Dummy Module and if it has a known device name
+			if ($childInstanceName == $name and $childInstance['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}")
+			{
+				return true;	
+			} 
+		}
+		return false;
+	}
+
 	private function requestFoobotAPI($url, $header = "") {
 		//global $debug, $timeout, $username, $password;
 		$username = $this->ReadPropertyString('Username');
@@ -309,25 +322,38 @@ class IPSFoobot extends IPSModule
 	private function CreateUpdateScript()
     {
         $Script = '<?
-		$IDuuid = IPS_GetObjectIDByIdent("Uuid",IPS_GetParent($_IPS["SELF"]));
-		$result = FB_GetDataLast(25938 /*[Weather\Foobot Air Sensor]*/, GetValue($IDuuid), 300, 300);  // "2C02576F809014C0"
-		print_r($result);
+$FBInstanceID = IPS_GetParent($_IPS['SELF']);
+$children = IPS_GetChildrenIDs($FBInstanceID);
+
+foreach($children as $child) //Loop on Heaters (Links in Heater directory)
+{
+   $childInstance = IPS_GetInstance($child);
+   // Check if it is a Dummy Module
+   if ($childInstance['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}")
+   {
+      $ID = $childInstance['InstanceID'];
+		$IDuuid = IPS_GetObjectIDByIdent("Uuid", $ID);
+		//echo "FBInstanceID: $FBInstanceID - Child ID: $ID - uuid: ".GetValue($IDuuid)."\r\n";
+		$result = FOO_GetDataLast($FBInstanceID, GetValue($IDuuid), 300, 300);  // "2C02576F809014C0"
+		//print_r($result);
 
 		// foreach ($result as Device) { // check uuid with uuid idents
-		$IDpm = IPS_GetObjectIDByIdent("Pm",IPS_GetParent($_IPS["SELF"]));
+		$IDpm = IPS_GetObjectIDByIdent("Pm",$ID);
 		SetValue($IDpm, $result->datapoints[0][1]);
-		$IDco2 = IPS_GetObjectIDByIdent("Co2",IPS_GetParent($_IPS["SELF"]));
+		$IDco2 = IPS_GetObjectIDByIdent("Co2",$ID);
 		SetValue($IDco2, $result->datapoints[0][4]);
-		$IDvoc = IPS_GetObjectIDByIdent("Voc",IPS_GetParent($_IPS["SELF"]));
+		$IDvoc = IPS_GetObjectIDByIdent("Voc",$ID);
 		SetValue($IDvoc, $result->datapoints[0][5]);
-		$IDallpollu = IPS_GetObjectIDByIdent("Allpollu",IPS_GetParent($_IPS["SELF"]));
+		$IDallpollu = IPS_GetObjectIDByIdent("Allpollu",$ID);
 		SetValue($IDallpollu, $result->datapoints[0][6]);
-
-		IPS_LogMessage("FOOBOT", "datapoints 2: ".$result->datapoints[0][2]." - 3: ".$result->datapoints[0][3]);
-		$IDtmp = IPS_GetObjectIDByIdent("Tmp",IPS_GetParent($_IPS["SELF"]));
+		
+		//IPS_LogMessage("FOOBOT", "datapoints 2: ".$result->datapoints[0][2]." - 3: ".$result->datapoints[0][3]);
+		$IDtmp = IPS_GetObjectIDByIdent("Tmp",$ID);
 		SetValue($IDtmp, $result->datapoints[0][2]);
-		$IDhum = IPS_GetObjectIDByIdent("Hum",IPS_GetParent($_IPS["SELF"]));
+		$IDhum = IPS_GetObjectIDByIdent("Hum",$ID);
 		SetValue($IDhum, $result->datapoints[0][3]);
+	}
+}
 ?>';
         return $Script;
     }
@@ -335,7 +361,6 @@ class IPSFoobot extends IPSModule
 
 ################# PROTECTED (Thanks Nall-Chan)
 	
-	//Remove on next Symcon update
     protected function RegisterProfileInteger($Name, $Icon, $Prefix, $Suffix, $MinValue, $MaxValue, $StepSize)
     {
 
