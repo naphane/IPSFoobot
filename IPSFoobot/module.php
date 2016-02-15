@@ -217,7 +217,7 @@ class IPSFoobot extends IPSModule
 					IPS_SetParent($this->GetIDForIdent('Co2'), $FBdeviceModuleID);
 					$this->RegisterVariableInteger("Voc", "Volatile compounds", "Pollutant.VC", 11);
 					IPS_SetParent($this->GetIDForIdent('Voc'), $FBdeviceModuleID);
-					$this->RegisterVariableInteger("Pm", "Particulate matter", "Pollutant.PM", 12);
+					$this->RegisterVariableFloat("Pm", "PM2.5", "Pollutant.PM", 12);
 					IPS_SetParent($this->GetIDForIdent('Pm'), $FBdeviceModuleID);
 					$this->RegisterVariableFloat("Allpollu", "Global Pollution Index", "~Humidity.F", 13);
 					IPS_SetParent($this->GetIDForIdent('Allpollu'), $FBdeviceModuleID);
