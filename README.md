@@ -86,23 +86,23 @@ These functions will be available automatically after the module is imported wit
    ```
    Gets Data points for a specific period.
    string $from 	Time stamp for start of sampling period, e.g. 2014-10-25T00:00:00.
-	  string $to	Time stamp for end period.
-	  integer $sampling	Sampling in seconds	(default NULL).
+   string $to	Time stamp for end period.
+   integer $sampling	Sampling in seconds	(default NULL).
    Returns Array of Data points.
    
    ----------------------
    ```php 
     array FOO_GetDataLast(integer $InstanceID, string $uuid, $from, $to, integer $sampling);
    ```
-   Gets Data points for last period.
-	  string  $uuid UUID of the Device.	  
+   Gets Data points for last period
+   string  $uuid UUID of the Device.	  
    integer $period Period in seconds before last point to be sampled.
-	  integer $sampling	Sampling in seconds (default NULL).
+   integer $sampling	Sampling in seconds (default NULL).
    Returns Array of Data points.
 
 ## 6. Update Script
 
-A Script with the name "Foobot Update" is added below the Instance. This script will be triggered regularly with the interval sepficied in the coifguration settings of teh Instance. The script does not need to be updates, even after adding new devices at a later stage.
+A Script with the name "Foobot Update" is added below the Instance. This script will be triggered regularly with the interval specified in the configuration settings of the Instance. The script does not need to be updated, even after adding new devices at a later stage.
 
 **Changelog:**  
  Version 0.9:
