@@ -1,5 +1,5 @@
 # IPSFoobot
-IP-Symcon Module for the Foobot Air Sensor from Aiboxlab.
+IP-Symcon Module for the Foobot Air Sensor from Airboxlab.
 
 **Content**
 
