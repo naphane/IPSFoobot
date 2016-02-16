@@ -3,16 +3,16 @@ IP-Symcon Module for the Foobot Air Sensor from Airboxlab.
 
 **Content**
 
-1. [Functionalities]((#1-funktionsumfang))
-2. [Requirements](#2-anforderungen)
-3. [Installation and configuration](#3-installation--konfiguration)
-4. [Variables](#4-variablen)
-5. [Methods](#6-funktionen)
-6. [Update Script](#5)
+1. [Functionalities](#1-functionalities)
+2. [Requirements](#2-requirements)
+3. [Installation and configuration](#3-installation--configuration)
+4. [Variables](#4-variables)
+5. [Methods](#5-methods)
+6. [Update Script](#6-update-script)
 
 ## 1. Functionalities
 
-This Module uses the Open API from Foobot to retrieve information and data from the Air Sensors asssociated to a specific User account. When the instance is created, it automatically sets up a Dummy Module for each Air Sensor associated to the account. Variables for the sensor measurements are added below each Module. The variables are updated by a Script which is copied below the Foobot Module Instance. The script is triggered regularly by a timer with the update interval provided in the settings of the Instance.
+This Module uses the Open API from Foobot to retrieve information and data from the Air Sensors asssociated to a specific User account. When the instance is created, it automatically sets up a Dummy Module Instance for each Air Sensor associated to the account. Variables for the sensor measurements are added below each Module. The variables are updated by a Script which is copied below the Foobot Module Instance. The script is triggered regularly by a timer with the update interval provided in the settings of the Instance.
 
 The Module supports multiple Foobot Sensors. This has however not been tested. Feedback is welcome on the [IP-Symcon forum thread](http://www.ip-symcon.de/forum/) dedicated to this module.
 
@@ -22,9 +22,15 @@ The Module supports multiple Foobot Sensors. This has however not been tested. F
  - [Foobot Air Sensor(s)](https://foobot.io/)
  - Foobot [API registration](api.foobot.io/apidoc/)
 
-## 3. Installation and configuration
+## 3. Installation & configuration
 
 ### Installation in IPS 4.x
+
+Add the following URL in the Modules Control (Core Instances > Modules:
+```php 
+git://github.com/naphane/IPSFoobot.git
+```
+It will then be possible to add a Foobot Instance.
 
 ![Create Instance](docs/Foobot_Module_Installation.png?raw=true "Create Instance")
 
@@ -59,19 +65,45 @@ An example of visualisation of the Foobot Variables in the IP-Symcon Webfront.
 
 ## 5. Methods
 
+These functions will be available automatically after the module is imported with the module control and will be callable from PHP and JSON-RPC 
+
    ```php 
     array FOO_GetDevices(integer $InstanceID);
    ```
+   Gets the Devices associated with the User account along with name and uuid.
+   Returns an Array of Devices.
    
+   ---------------------
    ```php 
     array FOO_UpdateDevices(integer $InstanceID);
    ```
+   Updates Device Instances and Variables.
+   Returns true if success.
    
+   ----------------------
    ```php 
-    array FOO_GetData(integer $InstanceID, string $uuid, $from, $to, integer $sampling = NULL);
+    array FOO_GetData(integer $InstanceID, string $uuid, $from, $to, integer $sampling);
    ```
+   Gets Data points for a specific period.
+   string $from 	Time stamp for start of sampling period, e.g. 2014-10-25T00:00:00.
+	  string $to	Time stamp for end period.
+	  integer $sampling	Sampling in seconds	(default NULL).
+   Returns Array of Data points.
    
+   ----------------------
    ```php 
-    array GetDataLast(integer $InstanceID, string $uuid, $from, $to, integer $sampling = NULL);
+    array FOO_GetDataLast(integer $InstanceID, string $uuid, $from, $to, integer $sampling);
    ```
-   
+   Gets Data points for last period.
+	  string  $uuid UUID of the Device.	  
+   integer $period Period in seconds before last point to be sampled.
+	  integer $sampling	Sampling in seconds (default NULL).
+   Returns Array of Data points.
+
+## 6. Update Script
+
+A Script with the name "Foobot Update" is added below the Instance. This script will be triggered regularly with the interval sepficied in the coifguration settings of teh Instance. The script does not need to be updates, even after adding new devices at a later stage.
+
+**Changelog:**  
+ Version 0.9:
+  - Beta Release
