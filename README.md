@@ -12,7 +12,7 @@ IP-Symcon Module for the Foobot Air Sensor from Airboxlab.
 
 ## 1. Functionalities
 
-This Module uses the Open API from Foobot to retrieve information and data from the Air Sensors asssociated to a specific User account. When the instance is created, it automatically sets up a Dummy Module Instance for each Air Sensor associated to the account. Variables for the sensor measurements are added below each Module. The variables are updated by a Script which is copied below the Foobot Module Instance. The script is triggered regularly by a timer with the update interval provided in the settings of the Instance.
+This Module uses the Open API from Foobot to retrieve information and data from the Air Sensors associated to a specific User account. When the instance is created, it automatically sets up a Dummy Module Instance for each Air Sensor associated to the account. Variables for the sensor measurements are added below each Module. The variables are updated by a Script which is copied below the Foobot Module Instance. The script is triggered regularly by a timer with the update interval provided in the settings of the Instance.
 
 The Module supports multiple Foobot Sensors. This has however not been tested. Feedback is welcome on the [IP-Symcon forum thread](https://www.symcon.de/forum/threads/30622-Foobot-Air-Sensor-Modul) dedicated to this module.
 
