@@ -20,7 +20,7 @@ The Module supports multiple Foobot Sensors. This has however not been tested. F
 
  - IPS 4.x
  - [Foobot Air Sensor(s)](http://foobot.io/)
- - Foobot [API registration](http://api.foobot.io/apidoc/)
+ - Foobot [API registration](http://api.foobot.io/apidoc/index.html)
 
 ## 3. Installation & configuration
 
