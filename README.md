@@ -36,7 +36,7 @@ The Module supports multiple Foobot Sensors. This has however not been tested. F
 | Password        | string |                | Password             |
 | Update interval | integer| 600            | Interval in seconds  |
 
-Once the changes have been applied, the "Check Devices" button of the Test Center will be enabled. This button must be clicked when new Air Sensors are added. The new Sensor will be dtected and instances and variables will be created automatically.
+Once the changes have been applied, the "Check Devices" button of the Test Center will be enabled. This button must be clicked when new Air Sensors are added. The new Sensor will be detected and instances and variables will be created automatically.
 
 ## 4. Variables
 
@@ -56,3 +56,22 @@ For each variable, a corresponding profile with the data type and coloring schem
 An example of visualisation of the Foobot Variables in the IP-Symcon Webfront.
 
 ![Webfront](docs/Foobot_Module_Webfront.png?raw=true "Webfront")
+
+## 5. Methods
+
+   ```php 
+    array FOO_GetDevices(integer $InstanceID);
+   ```
+   
+   ```php 
+    array FOO_UpdateDevices(integer $InstanceID);
+   ```
+   
+   ```php 
+    array FOO_GetData(integer $InstanceID, string $uuid, $from, $to, integer $sampling = NULL);
+   ```
+   
+   ```php 
+    array GetDataLast(integer $InstanceID, string $uuid, $from, $to, integer $sampling = NULL);
+   ```
+   
