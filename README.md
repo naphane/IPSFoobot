@@ -102,7 +102,7 @@ These functions will be available automatically after the module is imported wit
 
 ## 6. Update Script
 
-A Script with the name "Foobot Update" is added below the Instance. This script will be triggered regularly with the interval specified in the configuration settings of the Instance. The script does not need to be updated, even after adding new devices at a later stage.
+A Script with the name "Foobot Update" is added below the Instance. This script will be triggered regularly with the interval specified in the configuration settings of the Instance. The script does not need to be edited, even after adding new devices at a later stage.
 
 **Changelog:**  
  Version 0.9:
