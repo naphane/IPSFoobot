@@ -34,8 +34,9 @@ The Module supports multiple Foobot Sensors. This has however not been tested. F
 | :-------------: | :----: | :------------: | :------------------: |
 | Username        | string |                | Username from Foobot |
 | Password        | string |                | Password             |
-| Update interval | string | 600            | Interval in seconds  |
+| Update interval | integer| 600            | Interval in seconds  |
 
+Once the changes have been applied, the "Check Devices" button of the Test Center will be enabled. This button must be clicked when new Air Sensors are added. The new Sensor will be dtected and instances and variables will be created automatically.
 
 ## 4. Variables
 
@@ -43,7 +44,7 @@ The screenshot below shows the Variables created in IP-Symcon for each sensor al
 
 ![Variables created by the Instance](docs/Foobot_Module_Variables.png?raw=true "Variables created by the Instance")
 
-For each variable, a corresponding profle with the data type and coloring schemes accoring to limits from WHO is created and associated to the variable.
+For each variable, a corresponding profile with the data type and coloring schemes according to limits recommended by WHO is created and associated to the variable.
 
 | Variable                    | Type      | Unit           |  Limits              |
 | :-------------------------: | :-------: | :------------: | :------------------: |
@@ -52,6 +53,6 @@ For each variable, a corresponding profle with the data type and coloring scheme
 | Particulate Matters (PM2.5) | float     | ug/m3          |  25.0                |
 | Golbal Pollution Index      | float     | %              | -                    |
 
-An example of visualisation of the Foobot Variables on the IP-Symcon Webfront.
+An example of visualisation of the Foobot Variables in the IP-Symcon Webfront.
 
 ![Webfront](docs/Foobot_Module_Webfront.png?raw=true "Webfront")
