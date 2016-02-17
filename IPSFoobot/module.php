@@ -150,15 +150,6 @@ class IPSFoobot extends IPSModule
 		}
 	}
 	
-	//public function SendRaw($Command, $Value, $needResponse)
-    //{
-    //    $LMSData = new LMSData($Command, $Value, $needResponse);
-    //    $ret = $this->SendLMSData($LMSData);
-    //    if (is_bool($ret))
-    //        return $ret;
-    //    return $ret;
-	//
-    //}
 
 ################# PRIVATE
 	
