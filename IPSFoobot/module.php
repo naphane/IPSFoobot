@@ -1,7 +1,5 @@
 <?
 
-//require_once(__DIR__ . "/../SqueezeBoxClass.php");  // diverse Klassen
-
 class IPSFoobot extends IPSModule
 {
 	private $Timeout	= 30;
@@ -12,7 +10,6 @@ class IPSFoobot extends IPSModule
     {
         //Never delete this line!
         parent::Create();
-        //$this->RequireParent("{3CFF0FD9-E306-41DB-9B5A-9D06D38576C3}", "Logitech Media Server");
         
 		$this->RegisterPropertyString("Username", "");
         $this->RegisterPropertyString("Password", "");
@@ -30,10 +27,7 @@ class IPSFoobot extends IPSModule
     {
         //Never delete this line!
         parent::ApplyChanges();
-        //$change = false;
 
-        //$ParentID = $this->GetParent();
-        //if (!($ParentID === false))
         if ($this->ReadPropertyString('Username') == '' or $this->ReadPropertyString('Password') == '')
         {
 			// Username and Password can't be empty
@@ -80,7 +74,6 @@ class IPSFoobot extends IPSModule
 			//echo "\r\nJSON DECODED:\r\n";
 			//print_r($result);
 			//$name = $result->name;
-			//SetValue(50642 /*[Weather\Foobot\uuid]*/, $result->uuid);
 			return $result;
 		} else {
 			return false;
@@ -115,8 +108,7 @@ class IPSFoobot extends IPSModule
 		//$from	= "2014-10-25T00:00:00";
 		//$to 	= "2014-10-30T00:00:00";
 		//$period = 3600;  // Period in Seconds
-		$result = $this->requestFoobotAPI($this->Host."device/".$uuid."/datapoint/$from/$to/$sampling/", "'$tokenHeader'");
-		//$json_result = requestFoobotAPI($host."/v2/device/".$result->uuid."/datapoint/$period/last/0/", "'$token[0]'");		
+		$result = $this->requestFoobotAPI($this->Host."device/".$uuid."/datapoint/$from/$to/$sampling/", "'$tokenHeader'");		
 		
 		$match = preg_match('/{(.+)}/', $result, $json);
 		
