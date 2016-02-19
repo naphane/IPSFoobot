@@ -87,7 +87,7 @@ class IPSFoobot extends IPSModule
      */
 	public function UpdateDevices()  
 	{
-		$this->CreateDevices(true);
+		$this->CreateDevices();	// true ($isUpdate)
 	}
 	
 	/**
@@ -154,7 +154,7 @@ class IPSFoobot extends IPSModule
 ################# PRIVATE
 	
 
-	private function CreateDevices($isUpdate = false)
+	private function CreateDevices()	// $isUpdate = false
 	{
 	// Create Variables Profiles
 		// From Foobot: ["time","pm","tmp","hum","co2","voc","allpollu"],"units":["s","ugm3","C","pc","ppm","ppb","%"] [1445275154,45.449997,25.754375,39.512215,1033.0,286.0,62.60714]
@@ -179,7 +179,7 @@ class IPSFoobot extends IPSModule
 		if ($devices !== false) {
 			//foreach ($devices as $device) {	// Prepared for multiple Foobot devices support - to be tested
 				// Create a dummy Instance for each Foobot Sensor if it does not exist already
-				if (!$this->deviceInstanceExists($devices->name, $isUpdate))
+				if (!$this->deviceInstanceExists($devices->name))	// , $isUpdate (bug?)
 				{
 					$FBdeviceModuleID	= IPS_CreateInstance("{485D0419-BE97-4548-AA9C-C083EB82E61E}");
 					IPS_SetName($FBdeviceModuleID, $devices->name);
@@ -220,10 +220,10 @@ class IPSFoobot extends IPSModule
 		}
 	}
 
-	private function deviceInstanceExists($name, $isUpdate)
+	private function deviceInstanceExists($name)	// , $isUpdate (bug?)
 	{
-		if ($isUpdate)
-		{
+		//if ($isUpdate)
+		//{
 			$children = IPS_GetChildrenIDs($this->InstanceID);
 			foreach($children as $child) //Loop on Heaters (Links in Heater directory)
 			{
@@ -237,9 +237,9 @@ class IPSFoobot extends IPSModule
 				} 
 			}
 			return false;
-		} else {
-			return false;
-		}
+		//} else {
+		//	return false;
+		//}
 	}
 
 	private function requestFoobotAPI($url, $header = "") {
