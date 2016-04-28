@@ -172,7 +172,7 @@ class IPSFoobot extends IPSModule
             Array(0, 	"%d", "", 0x00FF00),
             Array(500, 	"%d", "", 0xFF0000)
         ));
-		$this->RegisterProfileIntegerEx("Pollutant.GPI", "Gauge", "", " %", Array(
+		$this->RegisterProfileFloatEx("Pollutant.GPI", "Gauge", "", " %", Array(
             Array(0, 	"%d", "", 0x00FF00),
             Array(50,   "%d", "", 0xFFFF00),
             Array(100,  "%d", "", 0xFF0000)
@@ -230,16 +230,18 @@ class IPSFoobot extends IPSModule
 		//if ($isUpdate)
 		//{
 			$children = IPS_GetChildrenIDs($this->InstanceID);
-			foreach($children as $child) //Loop on Heaters (Links in Heater directory)
+			foreach($children as $child) //Loop on devices
 			{
-				$childInstance = IPS_GetInstance($child);
-				$childInstanceID = $childInstance['InstanceID'];
-				$childInstanceName = IPS_GetName($childInstanceID);
-				// Check if it is a Dummy Module and if it has a known device name
-				if ($childInstanceName == $name and $childInstance['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}")
-				{
-					return true;	
-				} 
+				if (IPS_InstanceExists($child)) {
+					$childInstance = @IPS_GetInstance($child);
+					$childInstanceID = $childInstance['InstanceID'];
+					$childInstanceName = @IPS_GetName($childInstanceID);
+					// Check if it is a Dummy Module and if it has a known device name
+					if ($childInstanceName == $name and $childInstance['ModuleInfo']['ModuleID'] == "{485D0419-BE97-4548-AA9C-C083EB82E61E}")
+					{
+						return true;	
+					} 
+				}
 			}
 			return false;
 		//} else {
