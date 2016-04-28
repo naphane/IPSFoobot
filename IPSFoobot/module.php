@@ -172,6 +172,11 @@ class IPSFoobot extends IPSModule
             Array(0, 	"%d", "", 0x00FF00),
             Array(500, 	"%d", "", 0xFF0000)
         ));
+		$this->RegisterProfileIntegerEx("Pollutant.GPI", "Gauge", "", " %", Array(
+            Array(0, 	"%d", "", 0x00FF00),
+            Array(50,   "%d", "", 0xFFFF00),
+            Array(100,  "%d", "", 0xFF0000)
+        ));
 		
 		// Get Foobot devices from API and loop on them to create Instances and Variables
 		$devices = $this->GetDevices();
@@ -202,7 +207,7 @@ class IPSFoobot extends IPSModule
 					IPS_SetParent($this->GetIDForIdent('Voc'), $FBdeviceModuleID);
 					$this->RegisterVariableFloat("Pm", "PM2.5", "Pollutant.PM", 12);
 					IPS_SetParent($this->GetIDForIdent('Pm'), $FBdeviceModuleID);
-					$this->RegisterVariableFloat("Allpollu", "Global Pollution Index", "~Humidity.F", 13);
+					$this->RegisterVariableFloat("Allpollu", "Global Pollution Index", "Pollutant.GPI", 13);
 					IPS_SetParent($this->GetIDForIdent('Allpollu'), $FBdeviceModuleID);
 				
 					$this->RegisterVariableFloat("Tmp", "Temperature", "~Temperature", 14);
