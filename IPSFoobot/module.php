@@ -173,9 +173,9 @@ class IPSFoobot extends IPSModule
             Array(500, 	"%d", "", 0xFF0000)
         ));
 		$this->RegisterProfileFloatEx("Pollutant.GPI", "Gauge", "", " %", Array(
-            Array(0, 	"%d", "", 0x00FF00),
-            Array(50,   "%d", "", 0xFFFF00),
-            Array(100,  "%d", "", 0xFF0000)
+            Array(0, 	"%.1f", "", 0x00FF00),
+            Array(50,   "%.1f", "", 0xFFFF00),
+            Array(100,  "%.1f", "", 0xFF0000)
         ));
 		
 		// Get Foobot devices from API and loop on them to create Instances and Variables
