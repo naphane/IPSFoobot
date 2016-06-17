@@ -13,6 +13,7 @@ class IPSFoobot extends IPSModule
         
 		$this->RegisterPropertyString("Username", "");
         $this->RegisterPropertyString("Password", "");
+		$this->RegisterPropertyString("APIKey", ""); 		
         $this->RegisterPropertyInteger("Update", 600);
 		
 		IPS_SetInfo($this->InstanceID, 'Request an API key at http://api.foobot.io/apidoc/index.html');
@@ -28,11 +29,16 @@ class IPSFoobot extends IPSModule
         //Never delete this line!
         parent::ApplyChanges();
 
-        if ($this->ReadPropertyString('Username') == '' or $this->ReadPropertyString('Password') == '')
+        if ($this->ReadPropertyString('Username') == '' or $this->ReadPropertyString('Password'))
         {
 			// Username and Password can't be empty
 			$this->SetStatus(202);
-        } 
+        }
+		elseif ($this->ReadPropertyString('APIKey') == '')
+        {
+			// API Key can't be empty
+			$this->SetStatus(204);
+        }
 		else
 		{
 			if ($this->Authenticate()) {
@@ -301,7 +307,7 @@ class IPSFoobot extends IPSModule
 	
 	private	function Authenticate() 
 	{
-		$result = $this->requestFoobotAPI($this->Host."user/".$this->ReadPropertyString('Username')."/login/");
+		$result = $this->requestFoobotAPI($this->Host."user/".$this->ReadPropertyString('Username')."/login/", "X-API-KEY-TOKEN:".$this->ReadPropertyString('APIKey'));
 		$auth = preg_match('/X-AUTH-TOKEN:\s([a-zA-Z0-9._]+)/', $result, $token);
 		if ($auth === false or $auth == 0) 
 		{

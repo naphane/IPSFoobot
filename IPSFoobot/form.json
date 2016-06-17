@@ -11,6 +11,11 @@
                     "type": "PasswordTextBox",
                     "caption": "Password"
                 },
+				{
+                    "name": "APIKey",
+                    "type": "ValidationTextBox",
+                    "caption": "API Key"
+                },
                 {
                     "name": "Update",
                     "type": "NumberSpinner",
@@ -46,6 +51,11 @@
                     "code": 203,
                     "icon": "error",
                     "caption": "No Foobot Devices have been found!"
+                },
+				{
+                    "code": 204,
+                    "icon": "error",
+                    "caption": "API Key cannot be empty!"
                 }
             ]
 }
