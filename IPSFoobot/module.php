@@ -4,7 +4,8 @@ class IPSFoobot extends IPSModule
 {
 	private $Timeout	= 30;
 	private $Host		= "api.foobot.io/v2/";
-	private $Token;
+	private $Token		= "";
+	private $debug 		= true;
 
     public function Create()
     {
@@ -307,10 +308,12 @@ class IPSFoobot extends IPSModule
 	
 	private	function Authenticate() 
 	{
-		$result = $this->requestFoobotAPI($this->Host."user/".$this->ReadPropertyString('Username')."/login/", "X-API-KEY-TOKEN:".$this->ReadPropertyString('APIKey'));
+		$tokenHeader = "X-API-KEY-TOKEN: ".$this->ReadPropertyString('APIKey');
+		$result = $this->requestFoobotAPI($this->Host."user/".$this->ReadPropertyString('Username')."/login/", "'$tokenHeader'");
 		$auth = preg_match('/X-AUTH-TOKEN:\s([a-zA-Z0-9._]+)/', $result, $token);
 		if ($auth === false or $auth == 0) 
 		{
+			if ($this->debug) IPS_LogMessage("MODULE FOOBOT", "No Authentication Token returned");
 			return false;
 		}
 		else
