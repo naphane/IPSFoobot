@@ -11,10 +11,11 @@
                     "type": "PasswordTextBox",
                     "caption": "Password"
                 },
+				{ "type": "Label", "label": "Request an API key at http://api.foobot.io/apidoc/index.html:" },
 				{
                     "name": "APIKey",
                     "type": "ValidationTextBox",
-                    "caption": "API Key"
+                    "caption": "API Secret Key"
                 },
                 {
                     "name": "Update",

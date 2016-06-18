@@ -2,10 +2,11 @@
 
 class IPSFoobot extends IPSModule
 {
-	private $Timeout	= 30;
-	private $Host		= "api.foobot.io/v2/";
-	private $Token		= "";
-	private $debug 		= true;
+	private $Timeout		= 30;
+	private $Host			= "api.foobot.io/v2/";
+	private $Token			= "";
+	private $APIRemaining 	= "";
+	private $debug 			= true;
 
     public function Create()
     {
@@ -49,6 +50,13 @@ class IPSFoobot extends IPSModule
 			}
 		}
 		
+		$this->RegisterVariableString("APIAT", "API Auth Token", "~String", 1);
+		IPS_SetParent($this->GetIDForIdent('APIAT'), $this->InstanceID);
+		IPS_SetHidden($this->GetIDForIdent('APIAT'), true);
+		
+		$this->RegisterVariableInteger("APILR", "API Limit Remaining", "", 2);
+		IPS_SetParent($this->GetIDForIdent('APILR'), $this->InstanceID);
+		
 		$this->CreateDevices();
 		
     }
@@ -66,8 +74,9 @@ class IPSFoobot extends IPSModule
      */
 	public function GetDevices() 
 	{
-		$tokenHeader = "X-AUTH-TOKEN: ".$this->Token;
-		$result = $this->requestFoobotAPI($this->Host."owner/".$this->ReadPropertyString('Username')."/device/", "'$tokenHeader'");
+		//$tokenHeader = "X-AUTH-TOKEN: ".$this->Token;
+		$tokenHeader = "X-API-KEY-TOKEN: ".$this->ReadPropertyString('APIKey');
+		$result = $this->requestFoobotAPI($this->Host."owner/".$this->ReadPropertyString('Username')."/device/", "$tokenHeader");
 		//echo "\r\nRESULT RAW:\r\n";
 		//print_r($result);
 
@@ -110,12 +119,13 @@ class IPSFoobot extends IPSModule
 	public function GetData(string $uuid, $from, $to, integer $sampling = NULL) 
 	{
 		if ($sampling == NULL) $sampling = 0;
-		$tokenHeader = "X-AUTH-TOKEN: ".$this->Token;
+		//$tokenHeader = "X-AUTH-TOKEN: ".$this->Token;
+		$tokenHeader = "X-API-KEY-TOKEN: ".$this->ReadPropertyString('APIKey');
 		//echo "\r\n\r\nGET DATA FROM LAST HOUR:\r\n";
 		//$from	= "2014-10-25T00:00:00";
 		//$to 	= "2014-10-30T00:00:00";
 		//$period = 3600;  // Period in Seconds
-		$result = $this->requestFoobotAPI($this->Host."device/".$uuid."/datapoint/$from/$to/$sampling/", "'$tokenHeader'");		
+		$result = $this->requestFoobotAPI($this->Host."device/".$uuid."/datapoint/$from/$to/$sampling/", "$tokenHeader");		
 		
 		$match = preg_match('/{(.+)}/', $result, $json);
 		
@@ -140,10 +150,11 @@ class IPSFoobot extends IPSModule
 	public function GetDataLast(string $uuid, integer $period, integer $sampling = NULL) 
 	{
 		if ($sampling == NULL) $sampling = 0;
-		$tokenHeader = "X-AUTH-TOKEN: ".$this->Token;
+		//$tokenHeader = "X-AUTH-TOKEN: ".$this->Token;
+		$tokenHeader = "X-API-KEY-TOKEN: ".$this->ReadPropertyString('APIKey');
 
 		$path = $this->Host."device/".$uuid."/datapoint/$period/last/$sampling/";
-		$result = $this->requestFoobotAPI($path, "'$tokenHeader'");	
+		$result = $this->requestFoobotAPI($path, "$tokenHeader");	
 		
 		//echo "GetDataLast: path: $path\r\n"; 
 		
@@ -293,6 +304,17 @@ class IPSFoobot extends IPSModule
 		if ($result === FALSE) {
 			die(curl_error($ch));
 		}
+		
+		$lr = preg_match('/X-API-KEY-LIMIT-REMAINING:\s([0-9]+)/', $result, $limitRemaining);
+		if ($lr === false or $lr == 0) 
+		{
+			if ($this->debug) IPS_LogMessage("MODULE FOOBOT", "No API KEY LIMIT REMAINING returned");
+		}
+		else
+		{
+			$this->APIRemaining = $limitRemaining[1];
+			SetValue($this->GetIDForIdent('APILR'), $this->APIRemaining);
+		}
 
 		if(!curl_errno($ch)){
 			$info = curl_getinfo($ch);
@@ -319,6 +341,7 @@ class IPSFoobot extends IPSModule
 		else
 		{
 			$this->Token = $token[1];
+			SetValue($this->GetIDForIdent('APIAT'), $token[1]);
 			return true;
 		}
 	}
