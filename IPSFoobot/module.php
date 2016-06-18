@@ -238,7 +238,7 @@ class IPSFoobot extends IPSModule
 			return true;
 		} else {
 			$this->SetStatus(203);
-			IPS_LogMessage("Foobot Module", "ERROR: No Foobot Devices have been found!");
+			if ($this->debug) IPS_LogMessage("FOOBOT Module", "ERROR: No Foobot Devices have been found!");
 			return false;
 		}
 	}
@@ -308,7 +308,7 @@ class IPSFoobot extends IPSModule
 		$lr = preg_match('/X-API-KEY-LIMIT-REMAINING:\s([0-9]+)/', $result, $limitRemaining);
 		if ($lr === false or $lr == 0) 
 		{
-			if ($this->debug) IPS_LogMessage("MODULE FOOBOT", "No API KEY LIMIT REMAINING returned");
+			if ($this->debug) IPS_LogMessage("FOOBOT Module", "WARNING: No API KEY LIMIT REMAINING returned");
 		}
 		else
 		{
@@ -331,7 +331,7 @@ class IPSFoobot extends IPSModule
 	private	function Authenticate() 
 	{
 		$tokenHeader = "X-API-KEY-TOKEN: ".$this->ReadPropertyString('APIKey');
-		$result = $this->requestFoobotAPI($this->Host."user/".$this->ReadPropertyString('Username')."/login/", "'$tokenHeader'");
+		$result = $this->requestFoobotAPI($this->Host."user/".$this->ReadPropertyString('Username')."/login/", "$tokenHeader");
 		$auth = preg_match('/X-AUTH-TOKEN:\s([a-zA-Z0-9._]+)/', $result, $token);
 		if ($auth === false or $auth == 0) 
 		{
